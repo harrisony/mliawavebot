@@ -6,6 +6,7 @@ import random
 import re
 import urllib2
 from BeautifulSoup import BeautifulSoup
+from google.appengine.api import memcache
 
 def OnRobotAdded(properties, context):
   """Invoked when the robot has been added."""
@@ -25,11 +26,15 @@ def OnBlipSumbitted(properties,context):
         blip.GetDocument().SetText(str(ab))
     elif contents[:4].upper() == "AWOD":
         #TODO: find if in memcache cache.
-
-        url = "http://mylifeisaverage.com"
-        html = urllib2.urlopen(url).read()
-        soupage = BeautifulSoup(html)
-        a = soupage.find('div',id='storyofday').h1.string.strip()
+	awod = memcache.get("awod")
+	if awod is not None:
+        	a = awod
+	else:
+	        url = "http://mylifeisaverage.com"
+	        html = urllib2.urlopen(url).read()
+	        soupage = BeautifulSoup(html)
+	        a = soupage.find('div',id='storyofday').h1.string.strip()
+		if not memcache.add("greetings", a, 43200)
         blip.GetDocument().SetText(str(a))
 
 
