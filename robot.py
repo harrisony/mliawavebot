@@ -33,7 +33,7 @@ def OnBlipSumbitted(properties,context):
 	        url = "http://mylifeisaverage.com"
 	        html = urllib2.urlopen(url).read()
 	        soupage = BeautifulSoup(html)
-	        a = soupage.find('div',id='storyofday').h1.string.strip()
+	        a = soupage.find('div',id='wotd').h1.string.strip()
 		if not memcache.add("greetings", a, 43200)
         blip.GetDocument().SetText(str(a))
 
