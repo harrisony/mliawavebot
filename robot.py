@@ -26,22 +26,17 @@ def OnBlipSumbitted(properties,context):
         blip.GetDocument().SetText(str(ab))
     elif contents[:4].upper() == "AWOD":
         #TODO: find if in memcache cache.
-	awod = memcache.get("awod")
-	if awod is not None:
-        	a = awod
-	else:
-	        url = "http://mylifeisaverage.com"
-	        html = urllib2.urlopen(url).read()
-	        soupage = BeautifulSoup(html)
-	        a = soupage.find('div',id='wotd').h1.string.strip()
-		if not memcache.add("greetings", a, 43200)
+	url = "http://mylifeisaverage.com"
+	html = urllib2.urlopen(url).read()
+	soupage = BeautifulSoup(html)
+	a = soupage.find('div',id='wotd').h1.string.strip()
         blip.GetDocument().SetText(str(a))
 
 
 if __name__ == '__main__':
   myRobot = robot.Robot('mliawavebot', 
       image_url='http://mliawavebot.appspot.com/static/icon.png',
-      version='4',
+      version='3',
       profile_url='http://harrisony.com/blog/2009/10/mlia-google-wave/')
   myRobot.RegisterHandler(events.WAVELET_SELF_ADDED, OnRobotAdded)
   myRobot.RegisterHandler(events.BLIP_SUBMITTED, OnBlipSumbitted)
